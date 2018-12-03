@@ -80,7 +80,7 @@ namespace dotnet_code_challenge.Test
         }
 
         [Fact]
-        public void JsonService_Returns_List_Of_Horses_Test()
+        public void JsonService_Returns_List_Of_Horses_With_Valid_Input_Test()
         {
             var appSettings = new AppSettings
             {

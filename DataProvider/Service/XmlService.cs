@@ -18,32 +18,44 @@ namespace DataProvider.Service
         {
             Dictionary<string, string> horseDict = new Dictionary<string, string>();
             List<Horse> horseList = new List<Horse>();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(_xmlDataFilePath);
-
-            var rootNode = doc.DocumentElement;
-            var horseNodes = rootNode.SelectNodes("races/race/horses/horse");
-
-            foreach (XmlNode horse in horseNodes)
+            try
             {
-                var horseName = horse.Attributes["name"].InnerText;
-                var horseNumber = horse.SelectSingleNode("number").InnerText;
-                horseDict.Add(horseNumber, horseName);
-            }
+                XmlDocument doc = new XmlDocument();
+                doc.Load(_xmlDataFilePath);
 
-            var priceNodes = rootNode.SelectNodes("races/race/prices/price/horses/horse");
-            foreach (XmlNode horseWithPrice in priceNodes)
-            {
-                var horseNumber = horseWithPrice.Attributes["number"].InnerText;
-                var horsePrice = horseWithPrice.Attributes["Price"].InnerText;
-                var horse = new Horse
+                var rootNode = doc.DocumentElement;
+                var horseNodes = rootNode.SelectNodes("races/race/horses/horse");
+
+                if (horseNodes.Count == 0) return null;
+
+                foreach (XmlNode horse in horseNodes)
                 {
-                    Name = horseDict[horseNumber],
-                    Price = Convert.ToDouble(horsePrice)
-                };
-                horseList.Add(horse);
+                    var horseName = horse.Attributes["name"].InnerText;
+                    var horseNumber = horse.SelectSingleNode("number").InnerText;
+                    horseDict.Add(horseNumber, horseName);
+                }
+
+                var priceNodes = rootNode.SelectNodes("races/race/prices/price/horses/horse");
+
+                if (priceNodes.Count == 0) return null;
+                foreach (XmlNode horseWithPrice in priceNodes)
+                {
+                    var horseNumber = horseWithPrice.Attributes["number"].InnerText;
+                    var horsePrice = horseWithPrice.Attributes["Price"].InnerText;
+                    var horse = new Horse
+                    {
+                        Name = horseDict[horseNumber],
+                        Price = Convert.ToDouble(horsePrice)
+                    };
+                    horseList.Add(horse);
+                }
+                return horseList;
             }
-            return horseList;
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error retreiving data from XmlService: {e}");
+                throw;
+            }
         }
     }
 }
