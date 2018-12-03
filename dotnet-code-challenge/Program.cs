@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace dotnet_code_challenge
 {
@@ -49,6 +50,15 @@ namespace dotnet_code_challenge
 
             // fetch all the horses from jsonService
             List<Horse> horses = jsonService.GetHorsesFromJsonService();
+
+            // get XmlService from serviceProvider
+            var xmlService = serviceProvider.GetService<IXmlService>();
+
+            // fetch all the horses from XmlService and add them to the existing list of horses
+            horses.AddRange(xmlService.GetHorsesFromXmlService());
+
+            // sort the horses by their prices in ascending order
+            var horsesSortedWithPrice = horses.OrderBy(x => x.Price).ToList();
         }
     }
 }
