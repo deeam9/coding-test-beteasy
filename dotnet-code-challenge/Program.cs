@@ -59,6 +59,11 @@ namespace dotnet_code_challenge
 
             // sort the horses by their prices in ascending order
             var horsesSortedWithPrice = horses.OrderBy(x => x.Price).ToList();
+
+            // Display the sorted horse names
+            horsesSortedWithPrice.ForEach(x => Console.WriteLine(x.Name));
+
+            Console.ReadLine();
         }
     }
 }
